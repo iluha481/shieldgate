@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: shieldgate_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-shieldgate_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - shieldgate_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: shieldgate_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - shieldgate_net
+
+  mock-upstream:
+    image: hashicorp/http-echo:latest
+    container_name: shieldgate_mock_upstream
+    command: ["-text=Hello from Protected Backend API!"]
+    ports:
+      - "5678:5678"
+    networks:
+      - shieldgate_net
+
+  shieldgate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shieldgate_app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_PORT=8080
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_NAME=${DB_NAME:-shieldgate_db}
+      - REDIS_HOST=redis:6379
+      - JWT_SECRET=${JWT_SECRET:-super-secret-jwt-key}
+      - MOCK_UPSTREAM_URL=http://mock-upstream:5678
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - shieldgate_net
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  shieldgate_net:
+    driver: bridge
