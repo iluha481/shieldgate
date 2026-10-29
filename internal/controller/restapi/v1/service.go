@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"shieldgate/internal/controller/restapi/middleware"
-	"shieldgate/internal/service"
+	"github.com/iluha481/shieldgate/internal/controller/restapi/middleware"
+	"github.com/iluha481/shieldgate/internal/service"
 )
 
 type ServiceController struct {

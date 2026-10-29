@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"shieldgate/internal/domain"
+	"github.com/iluha481/shieldgate/internal/domain"
 )
 
 var (

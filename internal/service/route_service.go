@@ -7,7 +7,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"shieldgate/internal/domain"
+
+	"github.com/iluha481/shieldgate/internal/domain"
 )
 
 var (

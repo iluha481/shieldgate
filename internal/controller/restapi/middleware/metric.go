@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"net/http"
-	"shieldgate/pkg/metrics"
 	"strings"
+
+	"github.com/iluha481/shieldgate/pkg/metrics"
 )
 
 type statusRecorder struct {

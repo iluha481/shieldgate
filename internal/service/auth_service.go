@@ -3,8 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
-	"shieldgate/internal/domain"
 	"strconv"
+
+	"github.com/iluha481/shieldgate/internal/domain"
 
 	"golang.org/x/crypto/bcrypt"
 )

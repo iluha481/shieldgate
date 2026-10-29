@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"shieldgate/pkg/jwt"
+	"github.com/iluha481/shieldgate/pkg/jwt"
 )
 
 type contextKey string

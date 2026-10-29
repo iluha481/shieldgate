@@ -8,8 +8,8 @@ import (
 	"math/rand"
 	"time"
 
-	"shieldgate/internal/domain"
-	"shieldgate/internal/service"
+	"github.com/iluha481/shieldgate/internal/domain"
+	"github.com/iluha481/shieldgate/internal/service"
 
 	"github.com/redis/go-redis/v9"
 )

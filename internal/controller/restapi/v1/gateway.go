@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"shieldgate/internal/service"
-	"shieldgate/pkg/proxy"
+	"github.com/iluha481/shieldgate/internal/service"
+	"github.com/iluha481/shieldgate/pkg/proxy"
 )
 
 type GatewayController struct {
@@ -42,7 +42,6 @@ func (c *GatewayController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Проксируем дальше на целевой бэкенд
 	if err := c.proxyManager.Forward(w, r, result.Service.TargetURL, result.Service.PathPrefix); err != nil {
 		writeError(w, http.StatusBadGateway, "upstream unreachable")
 	}

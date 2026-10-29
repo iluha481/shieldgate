@@ -4,8 +4,9 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"shieldgate/internal/app"
-	"shieldgate/internal/config"
+
+	"github.com/iluha481/shieldgate/internal/app"
+	"github.com/iluha481/shieldgate/internal/config"
 )
 
 func main() {

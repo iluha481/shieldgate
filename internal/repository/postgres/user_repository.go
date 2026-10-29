@@ -4,8 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"shieldgate/internal/domain"
-	"shieldgate/pkg/postgres"
+
+	"github.com/iluha481/shieldgate/internal/domain"
+	"github.com/iluha481/shieldgate/pkg/postgres"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"

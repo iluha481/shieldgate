@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	"shieldgate/internal/domain"
+
+	"github.com/iluha481/shieldgate/internal/domain"
 )
 
 type (
