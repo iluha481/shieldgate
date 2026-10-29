@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -13,14 +14,14 @@ var slidingWindowScript = redis.NewScript(`
 	local now = tonumber(ARGV[1])
 	local window = tonumber(ARGV[2])
 	local limit = tonumber(ARGV[3])
-
+	local uuid = ARGV[4]
 	local clearBefore = now - window
 	redis.call('ZREMRANGEBYSCORE', key, '-inf', clearBefore)
 
 	local currentRequests = redis.call('ZCARD', key)
 
 	if currentRequests < limit then
-		redis.call('ZADD', key, now, now)
+		redis.call('ZADD', key, now, uuid)
 		redis.call('PEXPIRE', key, window)
 		return 1
 	else
@@ -44,8 +45,8 @@ func (l *RedisLimiter) Allow(ctx context.Context, key string, limit int) (bool, 
 	redisKey := fmt.Sprintf("rate_limit:%s", key)
 	now := time.Now().UnixMilli()
 	window := 1000
-
-	res, err := slidingWindowScript.Run(ctx, l.rdb, []string{redisKey}, now, window, limit).Int()
+	ID := uuid.NewString()
+	res, err := slidingWindowScript.Run(ctx, l.rdb, []string{redisKey}, now, window, limit, ID).Int()
 	if err != nil {
 		return false, fmt.Errorf("redis limiter failed: %w", err)
 	}
