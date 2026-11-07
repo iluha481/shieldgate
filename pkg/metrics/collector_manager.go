@@ -21,18 +21,18 @@ func (c *CollectorManager) GetOrCreate(path string) *Collector {
 func (c *CollectorManager) Collect() []Metric {
 	metrics := make([]Metric, 0)
 	c.services.Range(func(key, value interface{}) bool {
-		serviceID := key.(int)
+		pathPrefix := key.(string)
 		collector := value.(*Collector)
 		total := collector.TotalRequests.Swap(0)
 		allowed := collector.AllowedRequests.Swap(0)
 		blocked := collector.BlockedRequests.Swap(0)
 		errors := collector.ErrorsRequests.Swap(0)
 		metrics = append(metrics, Metric{
-			ServiceID: serviceID,
-			RPS:       total,
-			Allowed:   allowed,
-			Blocked:   blocked,
-			Errors:    errors,
+			PathPrefix: pathPrefix,
+			RPS:        total,
+			Allowed:    allowed,
+			Blocked:    blocked,
+			Errors:     errors,
 		})
 		return true
 	})

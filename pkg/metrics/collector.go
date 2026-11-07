@@ -16,9 +16,9 @@ func NewCollector() *Collector {
 }
 
 type Metric struct {
-	ServiceID int    `json:"service_id"`
-	RPS       uint64 `json:"rps"`
-	Allowed   uint64 `json:"allowed"`
-	Blocked   uint64 `json:"blocked"`
-	Errors    uint64 `json:"errors"`
+	PathPrefix string `json:"path_prefix"`
+	RPS        uint64 `json:"rps"`
+	Allowed    uint64 `json:"allowed"`
+	Blocked    uint64 `json:"blocked"`
+	Errors     uint64 `json:"errors"`
 }

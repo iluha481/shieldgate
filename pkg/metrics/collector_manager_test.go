@@ -23,21 +23,21 @@ func TestCollectorManager_Collect(t *testing.T) {
 	col.AllowedRequests.Add(3)
 	col.BlockedRequests.Add(2)
 	col.ErrorsRequests.Add(1)
-	cm.services.Store(7, col)
+	cm.services.Store("/api", col)
 
 	got := cm.Collect()
 	if len(got) != 1 {
 		t.Fatalf("Collect() returned %d metrics, want 1", len(got))
 	}
 
-	want := Metric{ServiceID: 7, RPS: 6, Allowed: 3, Blocked: 2, Errors: 1}
+	want := Metric{PathPrefix: "/api", RPS: 6, Allowed: 3, Blocked: 2, Errors: 1}
 	if got[0] != want {
 		t.Errorf("Collect() = %+v, want %+v", got[0], want)
 	}
 
 	// Collect is a snapshot: counters are reset afterwards.
 	again := cm.Collect()
-	if len(again) != 1 || again[0] != (Metric{ServiceID: 7}) {
+	if len(again) != 1 || again[0] != (Metric{PathPrefix: "/api"}) {
 		t.Errorf("second Collect() = %+v, want zeroed metric", again)
 	}
 }
