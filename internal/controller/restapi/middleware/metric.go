@@ -24,7 +24,7 @@ func Metrics(cm *metrics.CollectorManager, next http.Handler) http.Handler {
 			statusCode:     http.StatusOK,
 		}
 		next.ServeHTTP(recorder, r)
-		prefix := extractServicePrefix(r.URL.Host)
+		prefix := extractServicePrefix(r.URL.Path)
 		collector := cm.GetOrCreate(prefix)
 		collector.TotalRequests.Add(1)
 		if recorder.statusCode >= 200 && recorder.statusCode < 300 {
