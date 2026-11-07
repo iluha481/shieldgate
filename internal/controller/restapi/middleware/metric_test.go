@@ -29,10 +29,10 @@ func TestMetrics_CountsResponses(t *testing.T) {
 			}))
 
 			// extractServicePrefix uses the request host as the metric key.
-			req := httptest.NewRequest(http.MethodGet, "http://svc1.example.com/api/users", nil)
+			req := httptest.NewRequest(http.MethodGet, "http://svc1.example.com/service1", nil)
 			handler.ServeHTTP(httptest.NewRecorder(), req)
 
-			col := manager.GetOrCreate("/svc1.example.com")
+			col := manager.GetOrCreate("/service1")
 			if got := col.TotalRequests.Load(); got != 1 {
 				t.Errorf("TotalRequests = %d, want 1", got)
 			}
@@ -53,10 +53,10 @@ func TestMetrics_DefaultsToOKStatus(t *testing.T) {
 	manager := metrics.NewCollectorManager()
 	handler := Metrics(manager, http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 
-	req := httptest.NewRequest(http.MethodGet, "http://svc.example.com/", nil)
+	req := httptest.NewRequest(http.MethodGet, "http://svc.example.com/service1", nil)
 	handler.ServeHTTP(httptest.NewRecorder(), req)
 
-	col := manager.GetOrCreate("/svc.example.com")
+	col := manager.GetOrCreate("/service1")
 	if got := col.AllowedRequests.Load(); got != 1 {
 		t.Errorf("AllowedRequests = %d, want 1", got)
 	}
@@ -67,7 +67,7 @@ func TestExtractServicePrefix(t *testing.T) {
 		host string
 		want string
 	}{
-		{host: "svc.example.com", want: "/svc.example.com"},
+		{host: "/service1/api/", want: "/service1"},
 		{host: "", want: ""},
 		{host: "/", want: ""},
 	}
